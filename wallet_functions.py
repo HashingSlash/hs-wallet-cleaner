@@ -28,13 +28,13 @@ def clean_wallet(Target_Wallet, Signing_Wallet=None, Trade_Ceiling=1, Note="Hash
             Asset_Details = Algod_Client.asset_info(Asset_Entry['asset-id'])
             if Asset_Details['params']['creator'] != Target_Wallet.address:
 
-                if Asset_Entry['amount'] != 0:
+                if i == 1 and Asset_Entry['amount'] != 0:
                     Sell_Quote = TradeQuote(Asset_Entry['amount'], Asset_Entry['asset-id'], 0, Target_Wallet.address)
                     if Sell_Quote.best_quote_amount_converted > 0 and Sell_Quote.best_quote_amount_converted < Trade_Ceiling:
                         TradeQuote.prepare_and_send_quote(Sell_Quote.best_platform, Sell_Quote.best_quote, Sell_Quote.best_pool, 
                                                           Target_Wallet, Signing_Wallet)
 
-                if Asset_Entry['amount'] == 0:
+                if i == 2 and Asset_Entry['amount'] == 0:
                     print('Opting out of: ' + str(Asset_Details['params']['name']))
                     Opt_Out_Txn = Transactions.AssetTransferTxn(
                         sender=Target_Wallet.address,
